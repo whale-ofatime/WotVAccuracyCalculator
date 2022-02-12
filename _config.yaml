@@ -1,8 +1,22 @@
-theme: ockham
+domain: my-site.github.io       # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
+url: https://my-site.github.io  # the base hostname and protocol for your site, e.g. http://example.com
+baseurl:      # place folder name if the site is served in a subfolder
 
-title: WotV Accuracy Calculator
-tagline: Hit-Rate Calculator for Accuracy vs. Evasion
-description: Description here
-author:
-  name: whale_ofatime
-  url: www.google.com
+title: Leaf Blog
+iconURL: assets/default-icon.png
+theme: jekyll-theme-leaf
+
+# for a clean URL
+permalink: :slug
+
+social:
+  twitter: _SupunKavinda
+  github: SupunKavinda
+
+plugins:
+ - jekyll-feed
+ - jekyll-seo-tag
+
+### comments & analytics
+hyvor_talk_website_id: 14
+google_analytics: UA-NNNNNNNN-N
