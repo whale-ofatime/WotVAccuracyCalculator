@@ -3,7 +3,7 @@ url: https://whale-ofatime.github.io  # the base hostname and protocol for your 
 baseurl: /WotVAccuracyCalculator/     # place folder name if the site is served in a subfolder
 description: Description here
 
-title: Leaf Blog
+title: War of the Visions Accuracy Calculator
 iconURL: assets/default-icon.png
 remote_theme: supunkavinda/jekyll-theme-leaf
 
