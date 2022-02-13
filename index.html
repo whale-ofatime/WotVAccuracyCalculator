@@ -1,4 +1,11 @@
 ---
 layout: page
+title: WotV Accuracy Calculator
 ---
-<h1>WotV Accuracy Calculator</h1>
+
+<select class="form-select" aria-label="Default select example">
+    <option selected>Open this select menu</option>
+  {% for unit in site.data.dump.Unit.items %}
+  <option value="{{ unit.iname }}">{{ unit.iname }}</option>
+  {% endfor %}
+</select>
