@@ -5,7 +5,125 @@ title: WotV Accuracy Calculator
 
 <select class="form-select" aria-label="Default select example">
     <option selected>Open this select menu</option>
-  {% for unit in site.data.dump.Unit.items %}
+  {% for unit in site.data.dump.data.Unit.items %}
   <option value="{{ unit.iname }}">{{ unit.iname }}</option>
   {% endfor %}
 </select>
+
+{% assign names = site.data.dump.en.UnitName.infos | sort: 'value' %}
+<select class="form-select" aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  {% for unit in names %}
+  <option value="{{ unit.value }}">{{ unit.value }}</option>
+  {% endfor %}
+</select>
+
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-4">
+      <div class="mb-3">
+        <label for="atkDexInput" class="form-label">DEX</label>
+        <input type="number" class="form-control" id="atkDexInput" placeholder=0>
+      </div>
+      <div class="mb-3">
+        <label for="atkLukInput" class="form-label">LUK</label>
+        <input type="number" class="form-control" id="atkLukInput" placeholder=0>
+      </div>
+      <div id="accBase"></div>
+    </div>
+    <div class="col col-md-auto">
+      <div id="hitRate"></div>
+    </div>
+    <div class="col col-lg-4">
+      <div class="mb-3">
+        <label for="defAgiInput" class="form-label">AGI</label>
+        <input type="number" class="form-control" id="defAgiInput" placeholder=0>
+      </div>
+      <div class="mb-3">
+        <label for="defLukInput" class="form-label">LUK</label>
+        <input type="number" class="form-control" id="defLukInput" placeholder=0>
+      </div>
+      <div id="evaBase"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  function getAccuracyBase(dex, luk) {
+    return (11*(dex**0.2)/20 + (luk**0.96)/200 - 1)*100
+  }
+  function getEvasionBase(agi, luk) {
+    return (11*Math.pow(agi,0.9)/1000 + Math.pow(luk,0.96)/200 - 1)*100
+  }
+
+  const atkDex = document.querySelector('#atkDexInput');
+  const atkLuk = document.querySelector('#atkLukInput');
+  const accBase = document.querySelector('#accBase');
+
+  const defAgi = document.querySelector('#defAgiInput');
+  const defLuk = document.querySelector('#defLukInput');
+  const evaBase = document.querySelector('#evaBase');
+
+  const hitRate = document.querySelector('#hitRate');
+
+  function updateAccBase() {
+    const acc = getAccuracyBase(Number(atkDex.value), Number(atkLuk.value)).toFixed(0);
+    accBase.textContent = acc;
+  }
+
+  function updateEvaBase() {
+    const eva = getEvasionBase(Number(defAgi.value), Number(defLuk.value)).toFixed(0);
+    evaBase.textContent = eva;
+  }
+
+  function updateHitRate() {
+    const hit = Number(accBase.textContent) - Number(evaBase.textContent);
+    hitRate.textContent = hit;
+  }
+
+  atkDex.addEventListener('change', () => {updateAccBase(); updateHitRate(); getUnitList()});
+  atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate(); getUnitList()});
+  defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate(); getUnitList()});
+  defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate(); getUnitList()});
+
+  class Unit {
+    constructor(name, dex, agi, luk) {
+      this.name = name,
+      this.dex = dex,
+      this.agi = agi,
+      this.luk = luk
+    }
+  }
+
+  function loadJSON(callback) {   
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', '../assets/test.json', true); // Replace 'appDataServices' with the path to your file
+    xobj.onreadystatechange = function () {
+    if (xobj.readyState == 4 && xobj.status == "200") {
+        // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+        callback(xobj.responseText);
+      }
+    };
+    xobj.send(null);  
+  }
+
+  function getUnitList() {
+    loadJSON(function(response) {
+      var actual_JSON = JSON.parse(response);
+      console.log(actual_JSON);
+    });
+  }
+
+  class VisionCard {
+    constructor(name, dex, agi, luk) {
+      this.name = name,
+      this.dex = dex,
+      this.agi = agi,
+      this.luk = luk
+    }
+  }
+
+</script>
