@@ -110,30 +110,6 @@ title: WotV Accuracy Calculator
     xobj.send(null);  
   }
 
-  function logJson() {
-    loadJSON('./assets/test.json', function(response) {
-      var actual_JSON = response;
-      console.log(actual_JSON); 
-    });
-  }
-
-  function outputJsonToObject(json, obj) {
-    obj = json;
-  }
-
-  function loadJSONToObject(filepath, object, callback) {   
-    var xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
-    xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
-    xobj.onreadystatechange = function () {
-    if (xobj.readyState == 4 && xobj.status == "200") {
-        // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-        callback(JSON.parse(xobj.responseText));
-      }
-    };
-    xobj.send(null);  
-  }
-
   async function loadJSONPromise(filepath, callback) {
     let promise = await new Promise((resolve, reject) => {
       var xobj = new XMLHttpRequest();
@@ -152,19 +128,23 @@ title: WotV Accuracy Calculator
     return promise;
   }
 
-  var testJson = {};
   function test() {
+    var testJson = {};
+    var enums;
     let p = loadJSONPromise('./assets/test.json',
       function(parsedJSON) {
         testJson = parsedJSON;
       }
     );
-    // loadJSON('./assets/test.json', testJson, outputJsonToObject);
-    p.then(() => {
+    let u = loadJSONPromise('./assets/dump/enums.json',
+      function(parsedJSON) {
+        enums = parsedJSON;
+      }
+    );
+    Promise.all([p, u]).then(() => {
       console.log(testJson);
+      console.log(enums);
     });
-    // console.log(testJson);
-    // console.log(Object.keys(testJson.length));
   }
 
   class VisionCard {
