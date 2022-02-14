@@ -83,10 +83,10 @@ title: WotV Accuracy Calculator
     hitRate.textContent = hit;
   }
 
-  atkDex.addEventListener('change', () => {updateAccBase(); updateHitRate(); getUnitList()});
-  atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate(); getUnitList()});
-  defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate(); getUnitList()});
-  defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate(); getUnitList()});
+  atkDex.addEventListener('change', () => {updateAccBase(); updateHitRate(); test()});
+  atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate(); test()});
+  defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate(); test()});
+  defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate(); test()});
 
   class Unit {
     constructor(name, dex, agi, luk) {
@@ -97,24 +97,74 @@ title: WotV Accuracy Calculator
     }
   }
 
-  function loadJSON(callback) {   
+  function loadJSON(filepath, callback) {   
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
-    xobj.open('GET', './assets/test.json', true); // Replace 'appDataServices' with the path to your file
+    xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
     xobj.onreadystatechange = function () {
     if (xobj.readyState == 4 && xobj.status == "200") {
         // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-        callback(xobj.responseText);
+        callback(JSON.parse(xobj.responseText));
       }
     };
     xobj.send(null);  
   }
 
-  function getUnitList() {
-    loadJSON(function(response) {
-      var actual_JSON = JSON.parse(response);
-      console.log(actual_JSON);
+  function logJson() {
+    loadJSON('./assets/test.json', function(response) {
+      var actual_JSON = response;
+      console.log(actual_JSON); 
     });
+  }
+
+  function outputJsonToObject(json, obj) {
+    obj = json;
+  }
+
+  function loadJSONToObject(filepath, object, callback) {   
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
+    xobj.onreadystatechange = function () {
+    if (xobj.readyState == 4 && xobj.status == "200") {
+        // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+        callback(JSON.parse(xobj.responseText));
+      }
+    };
+    xobj.send(null);  
+  }
+
+  async function loadJSONPromise(filepath, callback) {
+    let promise = await new Promise((resolve, reject) => {
+      var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+      xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
+      xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(JSON.parse(xobj.responseText));
+            resolve();
+        }
+      };
+      xobj.send(null); 
+    }).catch(err => console.log(err));
+
+    return promise;
+  }
+
+  var testJson = {};
+  function test() {
+    let p = loadJSONPromise('./assets/test.json',
+      function(parsedJSON) {
+        testJson = parsedJSON;
+      }
+    );
+    // loadJSON('./assets/test.json', testJson, outputJsonToObject);
+    p.then(() => {
+      console.log(testJson);
+    });
+    // console.log(testJson);
+    // console.log(Object.keys(testJson.length));
   }
 
   class VisionCard {
