@@ -3,59 +3,58 @@ layout: page
 title: WotV Accuracy Calculator
 ---
 
-<select id="unitDropdown" class="form-select" aria-label="Default select example">
-    <option selected>Open this select menu</option>
-  <!-- {% for unit in site.data.dump.data.Unit.items %}
-  <option value="{{ unit.iname }}">{{ unit.iname }}</option>
-  {% endfor %} -->
-</select>
-
-{% assign names = site.data.dump.en.UnitName.infos | sort: 'value' %}
-<select class="form-select" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  {% for unit in names %}
-  <option value="{{ unit.value }}">{{ unit.value }}</option>
-  {% endfor %}
-</select>
-
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col col-lg-4">
-      <div class="mb-3">
+      <h1 class="display-1">Attacker</h1>
+      <select id="atkUnitDropdown" class="form-select" aria-label="attack-unit">
+        <option selected disabled hidden>Choose Unit</option>
+      </select>
+      <div class="mt-3">
         <label for="atkDexInput" class="form-label">DEX</label>
         <input type="number" class="form-control" id="atkDexInput" placeholder=0>
       </div>
-      <div class="mb-3">
+      <div class="mt-3">
         <label for="atkLukInput" class="form-label">LUK</label>
         <input type="number" class="form-control" id="atkLukInput" placeholder=0>
       </div>
-      <div id="accBase"></div>
+      <div id="accBase">-100</div>
     </div>
-    <div class="col col-md-auto">
-      <div id="hitRate"></div>
+    <div class="col col-lg-3 pt-3">
+      <h1 class="display-1 text-center"><span id="hitRate" >0</span>%</h1>
     </div>
     <div class="col col-lg-4">
-      <div class="mb-3">
+      <h1 class="display-1">Defender</h1>
+      <select id="defUnitDropdown" class="form-select" aria-label="defend-unit">
+        <option selected disabled hidden>Choose Unit</option>
+      </select>
+      <div class="mt-3">
         <label for="defAgiInput" class="form-label">AGI</label>
         <input type="number" class="form-control" id="defAgiInput" placeholder=0>
       </div>
-      <div class="mb-3">
+      <div class="mt-3">
         <label for="defLukInput" class="form-label">LUK</label>
         <input type="number" class="form-control" id="defLukInput" placeholder=0>
       </div>
-      <div id="evaBase"></div>
+      <div id="evaBase">-100</div>
     </div>
   </div>
 </div>
 
-
-
 <script>
   function getAccuracyBase(dex, luk) {
-    return (11*(dex**0.2)/20 + (luk**0.96)/200 - 1)*100
+    if (dex < 0 || luk < 0) {
+      return -100
+    } else {
+      return (11*(dex**0.2)/20 + (luk**0.96)/200 - 1)*100
+    }
   }
   function getEvasionBase(agi, luk) {
-    return (11*Math.pow(agi,0.9)/1000 + Math.pow(luk,0.96)/200 - 1)*100
+    if (agi < 0 || luk < 0) {
+      return -100
+    } else {
+      return (11*Math.pow(agi,0.9)/1000 + Math.pow(luk,0.96)/200 - 1)*100
+    }
   }
 
   const atkDex = document.querySelector('#atkDexInput');
@@ -87,15 +86,6 @@ title: WotV Accuracy Calculator
   atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate()});
   defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate()});
   defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate()});
-
-  class Unit {
-    constructor(name, dex, agi, luk) {
-      this.name = name,
-      this.dex = dex,
-      this.agi = agi,
-      this.luk = luk
-    }
-  }
 
   function loadJSON(filepath, callback) {   
     var xobj = new XMLHttpRequest();
@@ -176,7 +166,7 @@ title: WotV Accuracy Calculator
      }
 }
 
-  function getUnitNameList() {
+  function loadNameDropdown(dropdownElementId) {
     var nameList;
     let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json',
       function(parsedJSON) {
@@ -189,7 +179,7 @@ title: WotV Accuracy Calculator
       var sortedList = playerUnits.sort(dynamicSort("value"));
       // var sortedNames = sortedList.map(function (unit) {return unit.value});
       // console.log(sortedNames);
-      var dropdown = document.querySelector("#unitDropdown")
+      var dropdown = document.querySelector(dropdownElementId);
       sortedList.forEach((unit) => {
         var option = document.createElement("option");
         option.value = unit.key;
@@ -199,23 +189,81 @@ title: WotV Accuracy Calculator
     });
   }
 
-  getUnitNameList();
+  loadNameDropdown("#atkUnitDropdown");
+  loadNameDropdown("#defUnitDropdown");
 
-  function addSortedUnitNameToDropdown() {
-    var nameList = getUnitNameList();
-    console.log(nameList);
-    var sortedList = nameList.sort(dynamicSort("value"));
-    var sortedNames = sortedList.map(function (unit) {return unit.value});
-    console.log(sortedNames);
-  }
+  var atkUnitDropdown = document.querySelector("#atkUnitDropdown");
+  var defUnitDropdown = document.querySelector("#defUnitDropdown");
+  // atkUnitDropdown.addEventListener('change', (event) => {
+  //   console.log(event.target.value);
+  // });
+  // defUnitDropdown.addEventListener('change', (event) => {
+  //   console.log(event.target.value);
+  // });
+  atkUnitDropdown.addEventListener('change', (event) => {updateStatsOnAtkUnitChange(event.target.value, '#atkDexInput', '#atkLukInput');});
+  defUnitDropdown.addEventListener('change', (event) => {updateStatsOnDefUnitChange(event.target.value, '#defAgiInput', '#defLukInput');});
 
-  class VisionCard {
-    constructor(name, dex, agi, luk) {
-      this.name = name,
+  class Unit {
+    constructor(key, dex, agi, luk) {
+      this.key = key,
       this.dex = dex,
       this.agi = agi,
       this.luk = luk
     }
+  }
+
+  function updateStatsOnAtkUnitChange(unitKey, dexInputElementId, lukInputElementId) {
+    let unitLevelPromise = getUnitLevelStats(unitKey);
+    Promise.all([unitLevelPromise]).then((values) => {
+      var unitLevelStats = values[0]
+      console.log(unitLevelStats);
+      var dexInput = document.querySelector(dexInputElementId);
+      var lukInput = document.querySelector(lukInputElementId);
+      dexInput.value = unitLevelStats.dex;
+      lukInput.value = unitLevelStats.luk;
+      dexInput.dispatchEvent(new Event("change"));
+      lukInput.dispatchEvent(new Event("change"));
+    })
+  }
+
+  function updateStatsOnDefUnitChange(unitKey, agiInputElementId, lukInputElementId) {
+    let unitLevelPromise = getUnitLevelStats(unitKey);
+    Promise.all([unitLevelPromise]).then((values) => {
+      var unitLevelStats = values[0]
+      console.log(unitLevelStats);
+      var agiInput = document.querySelector(agiInputElementId);
+      var lukInput = document.querySelector(lukInputElementId);
+      agiInput.value = unitLevelStats.agi;
+      lukInput.value = unitLevelStats.luk;
+      agiInput.dispatchEvent(new Event("change"));
+      lukInput.dispatchEvent(new Event("change"));
+    })
+  }
+
+  async function getUnitLevelStats(unitKey) {
+    let promise = await new Promise((resolve, reject) => {
+      var unitList;
+      let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json',
+        function(parsedJSON) {
+          unitList = parsedJSON.items;
+        }
+      );
+      unitPromise.then(() => {
+        var unitStatus = unitList.find(unit => unit.iname === unitKey).status;
+        var stats = unitStatus[unitStatus.length - 1];
+        resolve(new Unit(unitKey, stats.dex, stats.spd, stats.luk));
+      });
+    }).catch(err => console.log(err));
+
+    return promise;
+  }
+
+  function getUnitBoardStats() {
+
+  }
+
+  function getUnitJobStats() {
+
   }
 
 </script>
