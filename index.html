@@ -41,7 +41,25 @@ title: WotV Accuracy Calculator
   </div>
 </div>
 
+<script type="text/javascript" src="./assets/js/helper.js"></script>
+<script type="text/javascript" src="./assets/js/wotvfunction.js"></script>
+
 <script>
+  // let promiseList = [];
+  // // Download json from shalzuth repository at date timestamp
+  // let timestamp = (new Date()).getTime();
+  // const RAW_GIT_URL = 'https://raw.githubusercontent.com/shalzuth/wotv-ffbe-dump/master';
+  // // Data required for this table
+  // let files_required = [
+  //   '/en/UnitName.json',
+  //   '/data/Unit.json'
+  // ]
+  // files_required.forEach(file => {
+  //   promiseList.push($.getJSON(RAW_GIT_URL + file + '?t=' + timestamp, function(data){
+  //     console.log("Loaded: " + file);
+  //   }));
+  // });
+
   function getAccuracyBase(dex, luk) {
     if (dex < 0 || luk < 0) {
       return -100
@@ -82,103 +100,18 @@ title: WotV Accuracy Calculator
     hitRate.textContent = hit;
   }
 
-  atkDex.addEventListener('change', () => {updateAccBase(); updateHitRate()});
-  atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate()});
-  defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate()});
-  defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate()});
-
-  function loadJSON(filepath, callback) {   
-    var xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
-    xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
-    xobj.onreadystatechange = function () {
-    if (xobj.readyState == 4 && xobj.status == "200") {
-        // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-        callback(JSON.parse(xobj.responseText));
-      }
-    };
-    xobj.send(null);  
-  }
-
-  async function loadJSONPromise(filepath, callback) {
-    let promise = await new Promise((resolve, reject) => {
-      var xobj = new XMLHttpRequest();
-      xobj.overrideMimeType("application/json");
-      xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
-      xobj.onreadystatechange = function () {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(JSON.parse(xobj.responseText));
-            resolve();
-        }
-      };
-      xobj.send(null); 
-    }).catch(err => console.log(err));
-
-    return promise;
-  }
-
-  function test() {
-    var unitList;
-    var nameList;
-    let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json',
-      function(parsedJSON) {
-        unitList = parsedJSON;
-      }
-    );
-    let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json',
-      function(parsedJSON) {
-        nameList = parsedJSON;
-      }
-    );
-    Promise.all([unitPromise, namePromise]).then(() => {
-      console.log(unitList.items);
-      console.log(nameList.infos);
-
-      var map = new Map();
-      unitList.items.forEach(function(x) {x.name = null; map.set(x.iname, x);});
-      nameList.infos.forEach(function(y) {
-        var existing = map.get(y.key);
-        if (existing === undefined) {
-          map.set(y.key, y);
-        } 
-        else {
-          Object.assign(existing, y);
-        }
-      });
-      var result = Array.from(map.values());
-      console.log(result);
-    });
-  }
-
-  function dynamicSort(property) {
-    var sortOrder = 1;
-    if(property[0] === "-") {
-        sortOrder = -1;
-        property = property.substr(1);
-    }
-    return function (a,b) {
-        /* next line works with strings and numbers, 
-         * and you may want to customize it to your needs
-         */
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-        return result * sortOrder;
-     }
-}
+  atkDex.addEventListener('change', () => {updateAccBase(); updateHitRate();});
+  atkLuk.addEventListener('change', () => {updateAccBase(); updateHitRate();});
+  defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate();});
+  defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate();});
 
   function loadNameDropdown(dropdownElementId) {
-    var nameList;
-    let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json',
-      function(parsedJSON) {
-        nameList = parsedJSON.infos;
-      }
-    );
-    namePromise.then(() => {
+    let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json');
+    namePromise.then((values) => {
+      var nameList = values.infos
       var regex = /_P_/;
       var playerUnits = nameList.filter(unit => regex.test(unit.key));
       var sortedList = playerUnits.sort(dynamicSort("value"));
-      // var sortedNames = sortedList.map(function (unit) {return unit.value});
-      // console.log(sortedNames);
       var dropdown = document.querySelector(dropdownElementId);
       sortedList.forEach((unit) => {
         var option = document.createElement("option");
@@ -194,76 +127,33 @@ title: WotV Accuracy Calculator
 
   var atkUnitDropdown = document.querySelector("#atkUnitDropdown");
   var defUnitDropdown = document.querySelector("#defUnitDropdown");
-  // atkUnitDropdown.addEventListener('change', (event) => {
-  //   console.log(event.target.value);
-  // });
-  // defUnitDropdown.addEventListener('change', (event) => {
-  //   console.log(event.target.value);
-  // });
   atkUnitDropdown.addEventListener('change', (event) => {updateStatsOnAtkUnitChange(event.target.value, '#atkDexInput', '#atkLukInput');});
   defUnitDropdown.addEventListener('change', (event) => {updateStatsOnDefUnitChange(event.target.value, '#defAgiInput', '#defLukInput');});
 
-  class Unit {
-    constructor(key, dex, agi, luk) {
-      this.key = key,
-      this.dex = dex,
-      this.agi = agi,
-      this.luk = luk
-    }
-  }
-
   function updateStatsOnAtkUnitChange(unitKey, dexInputElementId, lukInputElementId) {
-    let unitLevelPromise = getUnitLevelStats(unitKey);
-    Promise.all([unitLevelPromise]).then((values) => {
-      var unitLevelStats = values[0]
-      console.log(unitLevelStats);
+    let statsPromise = getLevelStats(unitKey);
+    statsPromise.then((values) => {
+      stats = values[values.length - 1]
       var dexInput = document.querySelector(dexInputElementId);
       var lukInput = document.querySelector(lukInputElementId);
-      dexInput.value = unitLevelStats.dex;
-      lukInput.value = unitLevelStats.luk;
+      dexInput.value = stats.total.dex;
+      lukInput.value = stats.total.luk;
       dexInput.dispatchEvent(new Event("change"));
       lukInput.dispatchEvent(new Event("change"));
-    })
+    });
   }
 
   function updateStatsOnDefUnitChange(unitKey, agiInputElementId, lukInputElementId) {
-    let unitLevelPromise = getUnitLevelStats(unitKey);
-    Promise.all([unitLevelPromise]).then((values) => {
-      var unitLevelStats = values[0]
-      console.log(unitLevelStats);
+    let statsPromise = getLevelStats(unitKey);
+    statsPromise.then((values) => {
+      stats = values[values.length - 1]
       var agiInput = document.querySelector(agiInputElementId);
       var lukInput = document.querySelector(lukInputElementId);
-      agiInput.value = unitLevelStats.agi;
-      lukInput.value = unitLevelStats.luk;
+      agiInput.value = stats.total.spd;
+      lukInput.value = stats.total.luk;
       agiInput.dispatchEvent(new Event("change"));
       lukInput.dispatchEvent(new Event("change"));
-    })
-  }
-
-  async function getUnitLevelStats(unitKey) {
-    let promise = await new Promise((resolve, reject) => {
-      var unitList;
-      let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json',
-        function(parsedJSON) {
-          unitList = parsedJSON.items;
-        }
-      );
-      unitPromise.then(() => {
-        var unitStatus = unitList.find(unit => unit.iname === unitKey).status;
-        var stats = unitStatus[unitStatus.length - 1];
-        resolve(new Unit(unitKey, stats.dex, stats.spd, stats.luk));
-      });
-    }).catch(err => console.log(err));
-
-    return promise;
-  }
-
-  function getUnitBoardStats() {
-
-  }
-
-  function getUnitJobStats() {
-
+    });
   }
 
 </script>
