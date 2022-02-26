@@ -7,35 +7,21 @@
 <meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="WotV Accuracy Calculator" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Description here" />
-<meta property="og:description" content="Description here" />
-<link rel="canonical" href="http://localhost:4000/WotVAccuracyCalculator/" />
-<meta property="og:url" content="http://localhost:4000/WotVAccuracyCalculator/" />
-<meta property="og:site_name" content="War of the Visions Accuracy Calculator" />
+<meta name="description" content="War of the Visions Accuracy Calculator" />
+<meta property="og:description" content="War of the Visions Accuracy Calculator" />
+<link rel="canonical" href="https://whale-ofatime.github.io/WotVAccuracyCalculator/" />
+<meta property="og:url" content="https://whale-ofatime.github.io/WotVAccuracyCalculator/" />
+<meta property="og:site_name" content="WotV Accuracy Calculator" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="WotV Accuracy Calculator" />
 <script type="application/ld+json">
-{"headline":"WotV Accuracy Calculator","@type":"WebSite","description":"Description here","url":"http://localhost:4000/WotVAccuracyCalculator/","name":"War of the Visions Accuracy Calculator","@context":"https://schema.org"}</script>
+{"headline":"WotV Accuracy Calculator","@type":"WebSite","description":"War of the Visions Accuracy Calculator","url":"https://whale-ofatime.github.io/WotVAccuracyCalculator/","name":"WotV Accuracy Calculator","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/WotVAccuracyCalculator/assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="/WotVAccuracyCalculator/assets/css/style.css">
-  <script src="/WotVAccuracyCalculator/assets/js/bootstrap.bundle.min.js"></script><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/WotVAccuracyCalculator/feed.xml" title="War of the Visions Accuracy Calculator" /></head><body><header class="site-header"><a class="site-title" rel="author" href="/WotVAccuracyCalculator/">War of the Visions Accuracy Calculator</a>
+  <script src="/WotVAccuracyCalculator/assets/js/bootstrap.bundle.min.js"></script><link type="application/atom+xml" rel="alternate" href="https://whale-ofatime.github.io/WotVAccuracyCalculator/feed.xml" title="WotV Accuracy Calculator" /></head><body><header class="site-header"><a class="site-title" rel="author" href="/WotVAccuracyCalculator/">WotV Accuracy Calculator</a>
 
-  <!--<nav class="site-nav">
-      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-      <label for="nav-trigger">
-        <span class="menu-icon">
-          <svg viewBox="0 0 18 15" width="18px" height="15px">
-            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
-          </svg>
-        </span>
-      </label>
-
-      <div class="trigger">
-            <a class="page-link active" href="/WotVAccuracyCalculator/">
-              WotV Accuracy Calculator
-            </a></div>
-    </nav>-->
+  <!---->
 
 
   <!-- <div class="site-icon">
@@ -44,47 +30,161 @@
 
 </header><main class="page-content" aria-label="Content">
         <div class="wrapper">
-            <article class="post">
-
-  <header class="post-header">
-    <h1 class="post-title">WotV Accuracy Calculator</h1>
-  </header>
-
-  <div class="post-content">
-    <div class="container">
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-4">
-      <h1 class="display-1">Attacker</h1>
-      <select id="atkUnitDropdown" class="form-select" aria-label="attack-unit">
-        <option selected disabled hidden>Choose Unit</option>
-      </select>
-      <div class="mt-3">
-        <label for="atkDexInput" class="form-label">DEX</label>
-        <input type="number" class="form-control" id="atkDexInput" placeholder=0>
-      </div>
-      <div class="mt-3">
-        <label for="atkLukInput" class="form-label">LUK</label>
-        <input type="number" class="form-control" id="atkLukInput" placeholder=0>
-      </div>
-      <div id="accBase">-100</div>
+            <header class="post-header">
+  <div class="row">
+    <div class="col col-lg-10">
+      <h1 class="post-title">WotV Accuracy Calculator</h1>
     </div>
-    <div class="col col-lg-3 pt-3">
-      <h1 class="display-1 text-center"><span id="hitRate" >0</span>%</h1>
+    <div class="col col-lg-2 text-end">
+      <span data-bs-toggle="modal" data-bs-target="#statueMasteryModal">
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Statues & Masteries">
+          <i class="bi bi-trophy" style="font-size: 1.5rem;"></i>
+        </button>
+      </span>
     </div>
-    <div class="col col-lg-4">
-      <h1 class="display-1">Defender</h1>
-      <select id="defUnitDropdown" class="form-select" aria-label="defend-unit">
-        <option selected disabled hidden>Choose Unit</option>
-      </select>
-      <div class="mt-3">
-        <label for="defAgiInput" class="form-label">AGI</label>
-        <input type="number" class="form-control" id="defAgiInput" placeholder=0>
+  </div>
+</header>
+
+<div class="post-content">
+  <div class="container">
+    
+    <div class="row justify-content-md-center">
+      <div class="col col-lg-4">
+        
+        <!--Attacker-->
+        <h1 class="display-1">Attacker</h1>
+        <div class="mb-3">
+          <img id="atkUnitImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="width:250px;height:250px;object-fit:none;object-position: 50% 35%;"></i>
+        </div>
+        <select id="atkUnitDropdown" class="form-select mb-3" aria-label="attack-unit">
+          <option selected disabled hidden>Choose Unit</option>
+        </select>
+        <div class="mb-3">
+          <label for="atkDexInput" class="form-label">DEX</label>
+          <input type="number" class="form-control" id="atkDexInput" placeholder=0>
+        </div>
+        <div class="mb-3">
+          <label for="atkLukInput" class="form-label">LUK</label>
+          <input type="number" class="form-control" id="atkLukInput" placeholder=0>
+        </div>
+        <select id="atkVCDropdown" class="form-select mb-3" aria-label="attack-vision-card">
+          <option selected disabled hidden>Choose Vision Card</option>
+        </select>
+        <div id="accBase">-100</div>
+
       </div>
-      <div class="mt-3">
-        <label for="defLukInput" class="form-label">LUK</label>
-        <input type="number" class="form-control" id="defLukInput" placeholder=0>
+      <div class="col col-lg-3 pt-3">
+        
+        <!--Middle-->
+        <h1 class="display-1 text-center"><span id="hitRate" >0</span>%</h1>
+
       </div>
-      <div id="evaBase">-100</div>
+      <div class="col col-lg-4">
+        
+        <!--Defender-->
+        <h1 class="display-1">Defender</h1>
+        <div class="mb-3">
+          <img id="defUnitImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="width:250px;height:250px;object-fit:none;object-position: 50% 35%;"></i>
+        </div>
+        <select id="defUnitDropdown" class="form-select mb-3" aria-label="defend-unit">
+          <option selected disabled hidden>Choose Unit</option>
+        </select>
+        <div class="mb-3">
+          <label for="defAgiInput" class="form-label">AGI</label>
+          <input type="number" class="form-control" id="defAgiInput" placeholder=0>
+        </div>
+        <div class="mb-3">
+          <label for="defLukInput" class="form-label">LUK</label>
+          <input type="number" class="form-control" id="defLukInput" placeholder=0>
+        </div>
+        <select id="defVCDropdown" class="form-select mb-3" aria-label="defend-vision-card">
+          <option selected disabled hidden>Choose Vision Card</option>
+        </select>
+        <div id="evaBase">-100</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="statueMasteryModal" tabindex="-1" aria-labelledby="statueMasteryModallLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"  style="background-color: #212529">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statueMasteryModalLabel">Guild Stone Statues & Elemental Masteries</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <div class="row px-4">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="copyStatueMasterySwitch">
+            <label class="form-check-label" for="copyStatueMasterySwitch">Apply same stats to both attacker and defender</label>
+          </div>
+        </div>
+        <hr>
+        <div class="row justify-content-md-center">
+          <div class="col col-lg-4 d-flex justify-content-md-center">
+            <h6>Attacker</h6>
+          </div>
+          <div class="col col-lg-4">
+          </div>
+          <div class="col col-lg-4 d-flex justify-content-md-center">
+            <h6>Defender</h6>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col col-lg-3">
+            <select id="atkBullStatue" class="form-select mb-3" aria-label="attack-bull-statue">
+            </select>
+          </div>
+          <div class="col col-lg-6 d-flex justify-content-center align-items-center">
+            <h6>Bull Stone Statue</h6>
+          </div>
+          <div class="col col-lg-3">
+            <select id="defBullStatue" class="form-select mb-3" aria-label="defend-bull-statue">
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col col-lg-3">
+            <select id="atkLionStatue" class="form-select mb-3" aria-label="attack-lion-statue">
+            </select>
+          </div>
+          <div class="col col-lg-6 d-flex justify-content-center align-items-center">
+            <h6>Lion Stone Statue</h6>
+          </div>
+          <div class="col col-lg-3">
+            <select id="defLionStatue" class="form-select mb-3" aria-label="defend-lion-statue">
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col col-lg-3">
+            <select id="atkKnightStatue" class="form-select mb-3" aria-label="attack-knight-statue">
+            </select>
+          </div>
+          <div class="col col-lg-6 d-flex justify-content-center align-items-center">
+            <h6>Knight Stone Statue</h6>
+          </div>
+          <div class="col col-lg-3">
+            <select id="defKnightStatue" class="form-select mb-3" aria-label="defend-knight-statue">
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col col-lg-3">
+            <select id="atkElementMastery" class="form-select mb-3" aria-label="attack-element-mastery">
+            </select>
+          </div>
+          <div class="col col-lg-6 d-flex justify-content-center align-items-center">
+            <h6>Elemental Mastery</h6>
+          </div>
+          <div class="col col-lg-3">
+            <select id="defElementMastery" class="form-select mb-3" aria-label="defend-element-mastery">
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -93,20 +193,74 @@
 <script type="text/javascript" src="./assets/js/wotvfunction.js"></script>
 
 <script>
-  // let promiseList = [];
-  // // Download json from shalzuth repository at date timestamp
-  // let timestamp = (new Date()).getTime();
-  // const RAW_GIT_URL = 'https://raw.githubusercontent.com/shalzuth/wotv-ffbe-dump/master';
-  // // Data required for this table
-  // let files_required = [
-  //   '/en/UnitName.json',
-  //   '/data/Unit.json'
-  // ]
-  // files_required.forEach(file => {
-  //   promiseList.push($.getJSON(RAW_GIT_URL + file + '?t=' + timestamp, function(data){
-  //     console.log("Loaded: " + file);
-  //   }));
-  // });
+  function populateSelectDropdownWithNumbers(dropdownElementId, count) {
+    let dropdown = document.querySelector(dropdownElementId);
+    for (let i=1; i<=count; i++) {
+      let option = document.createElement("option");
+      option.value = i;
+      option.text = i;
+      dropdown.add(option, null);
+    }
+  }
+
+  populateSelectDropdownWithNumbers('#atkBullStatue', 10);
+  populateSelectDropdownWithNumbers('#defBullStatue', 10);
+  populateSelectDropdownWithNumbers('#atkLionStatue', 10);
+  populateSelectDropdownWithNumbers('#defLionStatue', 10);
+  populateSelectDropdownWithNumbers('#atkKnightStatue', 10);
+  populateSelectDropdownWithNumbers('#defKnightStatue', 10);
+  populateSelectDropdownWithNumbers('#atkElementMastery', 40);
+  populateSelectDropdownWithNumbers('#defElementMastery', 40);
+
+  const copyStatueMasterySwitch = document.querySelector('#copyStatueMasterySwitch');
+  const atkBullStatue = document.querySelector('#atkBullStatue');
+  const defBullStatue = document.querySelector('#defBullStatue');
+  const atkLionStatue = document.querySelector('#atkLionStatue');
+  const defLionStatue = document.querySelector('#defLionStatue');
+  const atkKnightStatue = document.querySelector('#atkKnightStatue');
+  const defKnightStatue = document.querySelector('#defKnightStatue');
+  const atkElementMastery = document.querySelector('#atkElementMastery');
+  const defElementMastery = document.querySelector('#defElementMastery');
+
+  copyStatueMasterySwitch.addEventListener('change', () => {
+    if (copyStatueMasterySwitch.checked) {
+      defBullStatue.disabled = true;
+      defLionStatue.disabled = true;
+      defKnightStatue.disabled = true;
+      defElementMastery.disabled = true;
+      defBullStatue.value = atkBullStatue.value;
+      defLionStatue.value = atkLionStatue.value;
+      defKnightStatue.value = atkKnightStatue.value;
+      defElementMastery.value = atkElementMastery.value;
+    }
+    else {
+      defBullStatue.disabled = false;
+      defLionStatue.disabled = false;
+      defKnightStatue.disabled = false;
+      defElementMastery.disabled = false;
+    }
+  });
+
+  atkBullStatue.addEventListener('change', () => {
+    if (copyStatueMasterySwitch.checked) {
+      defBullStatue.value = atkBullStatue.value;
+    }
+  });
+  atkLionStatue.addEventListener('change', () => {
+    if (copyStatueMasterySwitch.checked) {
+      defLionStatue.value = atkLionStatue.value;
+    }
+  });
+  atkKnightStatue.addEventListener('change', () => {
+    if (copyStatueMasterySwitch.checked) {
+      defKnightStatue.value = atkKnightStatue.value;
+    }
+  });
+  atkElementMastery.addEventListener('change', () => {
+    if (copyStatueMasterySwitch.checked) {
+      defElementMastery.value = atkElementMastery.value;
+    }
+  });
 
   function getAccuracyBase(dex, luk) {
     if (dex < 0 || luk < 0) {
@@ -153,16 +307,16 @@
   defAgi.addEventListener('change', () => {updateEvaBase(); updateHitRate();});
   defLuk.addEventListener('change', () => {updateEvaBase(); updateHitRate();});
 
-  function loadNameDropdown(dropdownElementId) {
+  function loadUnitDropdown(dropdownElementId) {
     let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json');
     namePromise.then((values) => {
-      var nameList = values.infos
-      var regex = /_P_/;
-      var playerUnits = nameList.filter(unit => regex.test(unit.key));
-      var sortedList = playerUnits.sort(dynamicSort("value"));
-      var dropdown = document.querySelector(dropdownElementId);
+      let nameList = values.infos
+      let regex = /_P_/;
+      let playerUnits = nameList.filter(unit => regex.test(unit.key));
+      let sortedList = playerUnits.sort(dynamicSort("value"));
+      let dropdown = document.querySelector(dropdownElementId);
       sortedList.forEach((unit) => {
-        var option = document.createElement("option");
+        let option = document.createElement("option");
         option.value = unit.key;
         option.text = unit.value;
         dropdown.add(option, null);
@@ -170,20 +324,67 @@
     });
   }
 
-  loadNameDropdown("#atkUnitDropdown");
-  loadNameDropdown("#defUnitDropdown");
+  loadUnitDropdown("#atkUnitDropdown");
+  loadUnitDropdown("#defUnitDropdown");
 
-  var atkUnitDropdown = document.querySelector("#atkUnitDropdown");
-  var defUnitDropdown = document.querySelector("#defUnitDropdown");
-  atkUnitDropdown.addEventListener('change', (event) => {updateStatsOnAtkUnitChange(event.target.value, '#atkDexInput', '#atkLukInput');});
-  defUnitDropdown.addEventListener('change', (event) => {updateStatsOnDefUnitChange(event.target.value, '#defAgiInput', '#defLukInput');});
+  function loadVCDropdown(dropdownElementId) {
+    let namePromise = loadJSONPromise('./assets/dump/en/VisionCardName.json');
+    namePromise.then((values) => {
+      let nameList = values.infos
+      let regex = /_LW_/;
+      let visionCards = nameList.filter(unit => regex.test(unit.key));
+      let sortedList = visionCards.sort(dynamicSort("value"));
+      let dropdown = document.querySelector(dropdownElementId);
+      sortedList.forEach((unit) => {
+        let option = document.createElement("option");
+        option.value = unit.key;
+        option.text = unit.value;
+        dropdown.add(option, null);
+      });
+    });
+  }
+
+  loadVCDropdown("#atkVCDropdown");
+  loadVCDropdown("#defVCDropdown");
+
+  let atkUnitDropdown = document.querySelector("#atkUnitDropdown");
+  let defUnitDropdown = document.querySelector("#defUnitDropdown");
+  atkUnitDropdown.addEventListener('change', (event) => {
+    updateStatsOnAtkUnitChange(event.target.value, '#atkDexInput', '#atkLukInput');
+    updateImageOnUnitChange(event.target.value, '#atkUnitImg');
+  });
+  defUnitDropdown.addEventListener('change', (event) => {
+    updateStatsOnDefUnitChange(event.target.value, '#defAgiInput', '#defLukInput');
+    updateImageOnUnitChange(event.target.value, '#defUnitImg');
+  });
+
+  function updateImageOnUnitChange(unitKey, imageElementId) {
+    let unitImageDirectory = "assets/dump/img/units/"
+    let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json');
+    unitPromise.then((values) => {
+      let data = parse_AnyData(values,"iname");
+      let unit = data.get(unitKey);
+      let regex = /_00/
+      let fileName;
+      if (regex.test(unit.voiceId) || !unit.hasOwnProperty('voiceId')) {
+        fileName = unit.charaId;
+      }
+      else {
+        // Handling for units with alternate costumes
+        fileName = unit.voiceId;
+      }
+      let imageRef = unitImageDirectory + fileName + ".png"
+      let image = document.querySelector(imageElementId);
+      image.src = imageRef;
+    });
+  }
 
   function updateStatsOnAtkUnitChange(unitKey, dexInputElementId, lukInputElementId) {
-    let statsPromise = getLevelStats(unitKey);
+    let statsPromise = getUnitLevelStats(unitKey);
     statsPromise.then((values) => {
       stats = values[values.length - 1]
-      var dexInput = document.querySelector(dexInputElementId);
-      var lukInput = document.querySelector(lukInputElementId);
+      let dexInput = document.querySelector(dexInputElementId);
+      let lukInput = document.querySelector(lukInputElementId);
       dexInput.value = stats.total.dex;
       lukInput.value = stats.total.luk;
       dexInput.dispatchEvent(new Event("change"));
@@ -192,11 +393,11 @@
   }
 
   function updateStatsOnDefUnitChange(unitKey, agiInputElementId, lukInputElementId) {
-    let statsPromise = getLevelStats(unitKey);
+    let statsPromise = getUnitLevelStats(unitKey);
     statsPromise.then((values) => {
       stats = values[values.length - 1]
-      var agiInput = document.querySelector(agiInputElementId);
-      var lukInput = document.querySelector(lukInputElementId);
+      let agiInput = document.querySelector(agiInputElementId);
+      let lukInput = document.querySelector(lukInputElementId);
       agiInput.value = stats.total.spd;
       lukInput.value = stats.total.luk;
       agiInput.dispatchEvent(new Event("change"));
@@ -204,10 +405,18 @@
     });
   }
 
-</script>
-  </div>
+  function updateStatsOnAtkVisionCardChange(vcKey, dexInputElementId, lukInputElementId) {
+    console.log(vcKey);
+    let statsPromise = getVisionCardLevelStats(vcKey);
+    statsPromise.then((values) => {
+      console.log(values);
+    });
+  }
 
-</article>
+  let atkVCDropdown = document.querySelector("#atkVCDropdown");
+  atkVCDropdown.addEventListener('change', (event) => {updateStatsOnAtkVisionCardChange(event.target.value, '#atkDexInput', '#atkLukInput');});
+
+</script>
         </div>
     </main><footer class="site-footer h-card">
     <data class="u-url" href="/WotVAccuracyCalculator/"></data>
@@ -215,7 +424,7 @@
     <div class="wrapper">
 
         <div class="footer">
-            <div class="footer-title">2022 &copy; War of the Visions Accuracy Calculator</div>
+            <div class="footer-title">2022 &copy; WotV Accuracy Calculator</div>
 
             <div class="footer-social-links">
                 <a target="_blank" rel="me" href="https://github.com/SupunKavinda">

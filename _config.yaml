@@ -1,9 +1,9 @@
 domain: whale-ofatime.github.io       # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
 url: https://whale-ofatime.github.io  # the base hostname and protocol for your site, e.g. http://example.com
 baseurl: /WotVAccuracyCalculator     # place folder name if the site is served in a subfolder
-description: Description here
+description: War of the Visions Accuracy Calculator
 
-title: War of the Visions Accuracy Calculator
+title: WotV Accuracy Calculator
 iconURL: assets/default-icon.png
 remote_theme: supunkavinda/jekyll-theme-leaf
 
@@ -15,7 +15,6 @@ social:
   github: SupunKavinda
 
 plugins:
- - jekyll-feed
  - jekyll-seo-tag
 
 ### comments & analytics

@@ -9,3 +9,4 @@ gem "webrick", "~> 1.7"
 gem "jekyll-theme-leaf"
 gem "kramdown-parser-gfm"
 gem "github-pages", "~> 223", group: :jekyll_plugins
+gem 'wdm', '~> 0.1.0'

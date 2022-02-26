@@ -1,7 +1,7 @@
 // General helper functions
 
 function loadJSON(filepath, callback) {   
-    var xobj = new XMLHttpRequest();
+    let xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
     xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
     xobj.onreadystatechange = function () {
@@ -15,7 +15,7 @@ function loadJSON(filepath, callback) {
 
 async function loadJSONPromise(filepath) {
     let promise = await new Promise((resolve, reject) => {
-        var xobj = new XMLHttpRequest();
+        let xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
         xobj.open('GET', filepath, true); // Replace 'appDataServices' with the path to your file
         xobj.onreadystatechange = function () {
@@ -31,7 +31,7 @@ async function loadJSONPromise(filepath) {
 }
 
 function dynamicSort(property) {
-    var sortOrder = 1;
+    let sortOrder = 1;
     if(property[0] === "-") {
         sortOrder = -1;
         property = property.substr(1);
@@ -40,7 +40,13 @@ function dynamicSort(property) {
         /* next line works with strings and numbers, 
         * and you may want to customize it to your needs
         */
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
         return result * sortOrder;
     }
 }
+
+// Initialise tooltips
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
