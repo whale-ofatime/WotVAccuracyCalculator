@@ -20,15 +20,44 @@ layout: default
   <div class="container">
     
     <div class="row justify-content-md-center">
-      <div class="col col-lg-4">
+      <div class="col col-lg-3">
         
         <!--Attacker-->
-        <h1 class="display-1">Attacker</h1>
+        <h1 class="display-1 text-center">Attacker</h1>
         <div class="mb-3">
           <img id="atkUnitImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="width:250px;height:250px;object-fit:none;object-position: 50% 35%;"></i>
         </div>
         <select id="atkUnitDropdown" class="form-select mb-3" aria-label="attack-unit">
           <option selected disabled hidden>Choose Unit</option>
+        </select>
+        <div class="mb-3" style="position: relative; width: 300px; height: 125px; overflow: hidden;">
+          <img id="atkEsperImg" class="position-absolute translate-middle" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="left: 25%; top: 70%"></i>
+          <button class="btn btn-outline-secondary position-absolute translate-middle top-50" style="right: 15%" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Esper Board">
+            <i class="bi bi-hexagon" style="font-size: 1.5rem;"></i>
+          </button>
+        </div>
+        <select id="atkEsperDropdown" class="form-select mb-3" aria-label="defend-esper">
+          <option selected disabled hidden>Choose Esper</option>
+        </select>
+        <div class="row mb-3" style="height: 111px">
+          <div class="col-lg-6">
+            <img id="atkVCImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="></i>
+          </div>
+          <div class="col-lg-6">
+            <img id="atkSubVCImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="></i>
+          </div>
+        </div>
+        <div class="form-floating">
+          <select id="atkVCDropdown" class="form-select mb-3" aria-label="attack-vision-card">
+            <option selected disabled hidden>Choose Vision Card</option>
+          </select>
+          <label for="atkVCDropdown" style="color:#212529">Main Vision Card</label>
+        </div>
+        <!-- <select id="atkVCDropdown" class="form-select mb-3" aria-label="attack-vision-card">
+          <option selected disabled hidden>Choose Vision Card</option>
+        </select> -->
+        <select id="atkSubVCDropdown" class="form-select mb-3" aria-label="attack-subvision-card" disabled>
+          <option selected disabled hidden>Choose Sub-Vision Card</option>
         </select>
         <div class="mb-3">
           <label for="atkDexInput" class="form-label">DEX</label>
@@ -38,27 +67,53 @@ layout: default
           <label for="atkLukInput" class="form-label">LUK</label>
           <input type="number" class="form-control" id="atkLukInput" placeholder=0>
         </div>
-        <select id="atkVCDropdown" class="form-select mb-3" aria-label="attack-vision-card">
-          <option selected disabled hidden>Choose Vision Card</option>
-        </select>
         <div id="accBase">-100</div>
 
       </div>
-      <div class="col col-lg-3 pt-3">
+      <div class="col col-lg-5 pt-3">
         
         <!--Middle-->
         <h1 class="display-1 text-center"><span id="hitRate" >0</span>%</h1>
 
       </div>
-      <div class="col col-lg-4">
+      <div class="col col-lg-3">
         
         <!--Defender-->
-        <h1 class="display-1">Defender</h1>
+        <h1 class="display-1 text-center">Defender</h1>
         <div class="mb-3">
           <img id="defUnitImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="width:250px;height:250px;object-fit:none;object-position: 50% 35%;"></i>
         </div>
         <select id="defUnitDropdown" class="form-select mb-3" aria-label="defend-unit">
           <option selected disabled hidden>Choose Unit</option>
+        </select>
+        <div class="mb-3" style="position: relative; width: 300px; height: 125px; overflow: hidden;">
+          <img id="defEsperImg" class="position-absolute translate-middle" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="left: 25%; top: 70%"></i>
+          <button class="btn btn-outline-secondary position-absolute translate-middle top-50" style="right: 15%" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Esper Board">
+            <i class="bi bi-hexagon" style="font-size: 1.5rem;"></i>
+          </button>
+        </div>
+        <select id="defEsperDropdown" class="form-select mb-3" aria-label="defend-esper">
+          <option selected disabled hidden>Choose Esper</option>
+        </select>
+        <div class="row mb-3" style="height: 111px">
+          <div class="col-lg-6">
+            <img id="defVCImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="></i>
+          </div>
+          <div class="col-lg-6">
+            <img id="defSubVCImg" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="></i>
+          </div>
+        </div>
+        <div class="form-floating">
+          <select id="defVCDropdown" class="form-select mb-3" aria-label="defend-vision-card">
+            <option selected disabled hidden>Choose Vision Card</option>
+          </select>
+          <label for="defVCDropdown" style="color:#212529">Main Vision Card</label>
+        </div>
+        <!-- <select id="defVCDropdown" class="form-select mb-3" aria-label="defend-vision-card">
+          <option selected disabled hidden>Choose Vision Card</option>
+        </select> -->
+        <select id="defSubVCDropdown" class="form-select mb-3" aria-label="defend-subvision-card" disabled>
+          <option selected disabled hidden>Choose Sub-Vision Card</option>
         </select>
         <div class="mb-3">
           <label for="defAgiInput" class="form-label">AGI</label>
@@ -68,9 +123,6 @@ layout: default
           <label for="defLukInput" class="form-label">LUK</label>
           <input type="number" class="form-control" id="defLukInput" placeholder=0>
         </div>
-        <select id="defVCDropdown" class="form-select mb-3" aria-label="defend-vision-card">
-          <option selected disabled hidden>Choose Vision Card</option>
-        </select>
         <div id="evaBase">-100</div>
 
       </div>
@@ -303,13 +355,13 @@ layout: default
     namePromise.then((values) => {
       let nameList = values.infos
       let regex = /_LW_/;
-      let visionCards = nameList.filter(unit => regex.test(unit.key));
+      let visionCards = nameList.filter(vc => regex.test(vc.key));
       let sortedList = visionCards.sort(dynamicSort("value"));
       let dropdown = document.querySelector(dropdownElementId);
-      sortedList.forEach((unit) => {
+      sortedList.forEach((vc) => {
         let option = document.createElement("option");
-        option.value = unit.key;
-        option.text = unit.value;
+        option.value = vc.key;
+        option.text = vc.value;
         dropdown.add(option, null);
       });
     });
@@ -317,6 +369,29 @@ layout: default
 
   loadVCDropdown("#atkVCDropdown");
   loadVCDropdown("#defVCDropdown");
+
+  function loadEsperDropdown(dropdownElementId) { 
+    let namePromise = loadJSONPromise('./assets/dump/en/UnitName.json');
+    namePromise.then((values) => {
+      let nameList = values.infos
+      let esperRegex = /_S_/;
+      let awakenRegex = /_AW/;
+      // Get espers and filter duplicates for different awaken status
+      let espers = nameList.filter(esper => (esperRegex.test(esper.key) && !awakenRegex.test(esper.key)));
+      let sortedList = espers.sort(dynamicSort("value"));
+      let dropdown = document.querySelector(dropdownElementId);
+      sortedList.forEach((esper) => {
+        let option = document.createElement("option");
+        option.value = esper.key;
+        option.text = esper.value;
+        dropdown.add(option, null);
+      });
+    });
+  }
+
+  loadEsperDropdown("#atkEsperDropdown");
+  loadEsperDropdown("#defEsperDropdown");
+
 
   let atkUnitDropdown = document.querySelector("#atkUnitDropdown");
   let defUnitDropdown = document.querySelector("#defUnitDropdown");
@@ -327,6 +402,26 @@ layout: default
   defUnitDropdown.addEventListener('change', (event) => {
     updateStatsOnDefUnitChange(event.target.value, '#defAgiInput', '#defLukInput');
     updateImageOnUnitChange(event.target.value, '#defUnitImg');
+  });
+
+  let atkEsperDropdown = document.querySelector("#atkEsperDropdown");
+  let defEsperDropdown = document.querySelector("#defEsperDropdown");
+  atkEsperDropdown.addEventListener('change', (event) => {
+    updateImageOnEsperChange(event.target.value, '#atkEsperImg');
+  });
+  defEsperDropdown.addEventListener('change', (event) => {
+    updateImageOnEsperChange(event.target.value, '#defEsperImg');
+  });
+
+  let atkVCDropdown = document.querySelector("#atkVCDropdown");
+  let defVCDropdown = document.querySelector("#defVCDropdown");
+  atkVCDropdown.addEventListener('change', (event) => {
+    updateStatsOnAtkVisionCardChange(event.target.value, '#atkDexInput', '#atkLukInput');
+    updateImageOnVCChange(event.target.value, "#atkVCImg");
+  });
+  defVCDropdown.addEventListener('change', (event) => {
+    updateStatsOnAtkVisionCardChange(event.target.value, '#atkDexInput', '#atkLukInput');
+    updateImageOnVCChange(event.target.value, "#defVCImg");
   });
 
   function updateImageOnUnitChange(unitKey, imageElementId) {
@@ -345,6 +440,32 @@ layout: default
         fileName = unit.voiceId;
       }
       let imageRef = unitImageDirectory + fileName + ".png"
+      let image = document.querySelector(imageElementId);
+      image.src = imageRef;
+    });
+  }
+
+  function updateImageOnEsperChange(esperKey, imageElementId) {
+    let unitImageDirectory = "assets/dump/img/units/"
+    let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json');
+    unitPromise.then((values) => {
+      let data = parse_AnyData(values,"iname");
+      let unit = data.get(esperKey);
+      let fileName = unit.charaId;
+      let imageRef = unitImageDirectory + fileName + ".png"
+      let image = document.querySelector(imageElementId);
+      image.src = imageRef;
+    });
+  }
+
+  function updateImageOnVCChange(vcKey, imageElementId) {
+    let vcImageDirectory = "assets/dump/img/visioncards/"
+    let vcPromise = loadJSONPromise('./assets/dump/data/VisionCard.json');
+    vcPromise.then((values) => {
+      let data = parse_AnyData(values,"iname");
+      let vc = data.get(vcKey);
+      let fileName = vc.icon;
+      let imageRef = vcImageDirectory + fileName + ".png"
       let image = document.querySelector(imageElementId);
       image.src = imageRef;
     });
@@ -377,14 +498,13 @@ layout: default
   }
 
   function updateStatsOnAtkVisionCardChange(vcKey, dexInputElementId, lukInputElementId) {
-    console.log(vcKey);
     let statsPromise = getVisionCardLevelStats(vcKey);
     statsPromise.then((values) => {
       console.log(values);
     });
+    let esperPromise = getEsperLevelStats();
+    esperPromise.then((values) => {
+      console.log(values);
+    })
   }
-
-  let atkVCDropdown = document.querySelector("#atkVCDropdown");
-  atkVCDropdown.addEventListener('change', (event) => {updateStatsOnAtkVisionCardChange(event.target.value, '#atkDexInput', '#atkLukInput');});
-
 </script>

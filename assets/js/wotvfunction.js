@@ -52,6 +52,29 @@ async function getVisionCardLevelStats(vc_iname) {
     return promise;
 }
 
+async function getEsperLevelStats() {
+	let promise = await new Promise((resolve, reject) => {
+		let unitPromise = loadJSONPromise('./assets/dump/data/Unit.json');
+		let unitNamePromise = loadJSONPromise('./assets/dump/en/UnitName.json');
+		let itemNamePromise = loadJSONPromise('./assets/dump/en/ItemName.json');
+		let netherBeastAbilityBoardPromise = loadJSONPromise('./assets/dump/data/NetherBeastAbilityBoard.json');
+		let buffPromise = loadJSONPromise('./assets/dump/data/Buff.json');
+		let promiseList = [unitPromise, unitNamePromise, itemNamePromise, netherBeastAbilityBoardPromise, buffPromise];
+		Promise.all(promiseList).then((values) => {
+			unit = parse_AnyData(values[0], 'iname');
+			unitName = parse_AnyName(values[1]);
+			itemName = parse_AnyName(values[2]);
+			netherBeastAbilityBoard = parse_AnyData(values[3], 'iname');
+			buff = parse_AnyData(values[4], 'iname');
+
+			data = get_datatable_NetherBeast();
+			resolve(data)
+		});
+	}).catch(err => console.log(err));
+
+	return promise;
+}
+
 //-----------------------------------------------------------------------------------
 // Credit to Krazplay at https://github.com/Krazplay/wotv for the following functions
 
@@ -800,6 +823,168 @@ function vc_cond_to_txt(condition_id) {
 	}
 	if (result == "") console.log("vc_cond_to_txt returns empty for visionCardLimitedCondition "+condition_id);
 	return (result != "") ? result : condition_id;
+}
+
+function get_datatable_NetherBeast() {
+	let line_id = 1;
+	result = [];
+	// If ID is in Esper Ability Board, then in unit file it's an equipable esper
+	for (let [iname, item] of netherBeastAbilityBoard) {
+		let base_esper = unit.get(iname)
+		let max_awk = 1+base_esper.nb_awake_id.length;
+		// One line per awakening + one for base
+		for (let awk_nb = 0; awk_nb < max_awk; awk_nb++) {
+			// Pick the right esper unit depending of the awakening
+			let esper = awk_nb == 0 ? base_esper : unit.get(base_esper.nb_awake_id[awk_nb-1])
+			let line = {};
+			line["iname"] = esper.iname;
+			line["name"] = unitName[esper.iname] ? unitName[esper.iname] : esper.iname;
+			line["awk"] = awk_nb;
+			// Is this the highest awakening level ?
+			line["bestv"] = (awk_nb == max_awk-1) ? 1 : 0;
+			// Getting all the possible stats, status[1] is the object with max stats
+			stats_list.forEach((stat) => {
+				line[stat] = esper.status[1][stat] ? esper.status[1][stat] : "";
+			});
+			// Element(s) of esper
+			line["elem"] = ""
+			esper.elem.forEach((elemt) => {
+				line["elem"] += typetxt[41+elemt] + ", ";
+			});
+			line["elem"] = line["elem"].slice(0,-2); // remove last ", "		
+			// Get all the buffs of the esper at this awakening
+			let buff_list = get_esper_buffs(iname, awk_nb);
+			// Merge similar buffs, this is now an array of buff objects
+			buff_list = sum_of_buffs_id(buff_list);
+			// Sort array to show most useful buffs first
+			buff_list.sort((a, b) => a.sort_priority - b.sort_priority);
+			// To improve readability I've added columns for specific buffs type
+			line["atk_buffs"] = bufflist_to_txt(buff_list.filter(buff_obj => buff_obj["sort_priority"] == 1));
+			line["elmt_buffs"] = bufflist_to_txt(buff_list.filter(buff_obj => buff_obj["sort_priority"] == 2));
+			line["stat_buffs"] = bufflist_to_txt(buff_list.filter(buff_obj => buff_obj["sort_priority"] == 3));
+			line["atk_res_buffs"] = bufflist_to_txt(buff_list.filter(buff_obj => buff_obj["sort_priority"] == 19));
+			
+			data = ["hit", "avd", "crt", "crta", "crtd"];
+			type = [  155,   156,   158,    159,    157];
+			
+			for (let i = 0; i < data.length; i++) {
+				let buff = buff_list.find(buff_obj => buff_obj["type1"] == type[i]);
+				if (buff) line[data[i]] = buff["val1"]
+				else line[data[i]] = "";
+			}
+			
+			//console.log( buff_list.filter(buff_obj => buff_obj["sort_priority"] == 7) );
+			// Translate into a readable text
+			line["skills_txt"] =  bufflist_to_txt(buff_list.filter(buff_obj => buff_obj["sort_priority"] > 13 && buff_obj["sort_priority"] != 19));
+			
+			line["line_id"] = line_id++;
+			result.push(line);
+		}
+	}
+	return result;
+}
+
+/*
+	Require netherBeastAbilityBoard, buff
+	Add the SP cost of the panel to the buff (as param sp)
+	Return an array of buff id available to the esper at this awakening level
+*/
+function get_esper_buffs(base_esper_iname, awk_lvl) {
+	let board = netherBeastAbilityBoard.get(base_esper_iname)["panels"];
+	let buffs_list = [];
+	board.forEach((panel) => {
+		if (panel.unlock_awake == null || awk_lvl+1 >= panel.unlock_awake) {
+			buffs_list.push(panel.value);
+			buff.get(panel.value)["sp"] = panel.sp;
+		}
+	});
+	return buffs_list;
+}
+
+/*
+	Input an array of buff ID, return an array of buff objects
+	Require buff
+	[buff_id1, buff_id2] (Slash+3, Slash+2) => [buff] (Slash+5)
+	To be safe, create a buff from scratch to make sure we don't clone multiple types by error
+	Also add sort_priority to easily sort them later if needed
+*/
+function sum_of_buffs_id(buff_list) {
+	let result = new Map;
+	buff_list.forEach((buff_id) => {
+		let curBuff = buff.get(buff_id);
+		// Loop as long as we find valid typeX in the buff params
+		for (let i=1; curBuff["type"+i] != null ; i++) {
+			// If the type, calc, and tags match, we consider it's the same kind of buff
+			let key = 'Type '+curBuff["type"+i]+' calc '+curBuff["calc"+i]+' tags '+curBuff["tag"+i];
+			// First time we meet this kind of buff
+			if (result.has(key) == false) {
+				let new_buff = clone_buff_minus_type(curBuff);
+				// copy type and val X to 1 in the new buff 
+				let param_list = ["type", "calc", "tag", "val", "val1"];
+				param_list.forEach((param) => {
+					new_buff[param+"1"] = curBuff[param+i];
+				});
+				// For easy sorting later if needed
+				new_buff["sort_priority"] = calculate_sort_buff(new_buff);
+				result.set(key, new_buff);
+			}
+			// Else we just add the value to the existing one
+			else {
+				result.get(key)["val1"] += curBuff["val"+i];
+				result.get(key)["val11"] += curBuff["val1"+i];
+				result.get(key)["sp"] += curBuff["sp"];
+			}
+		}
+	});
+	// Return only the values as an array, don't care for the keys
+	return Array.from(result.values());
+}
+
+/*
+	Clone the parameters except everything to do with the type (calc, tags, val, val1, etc...)
+	Easier for maintenance if they add new params
+*/
+function clone_buff_minus_type(buff_obj) {
+	let result = {};
+	let param_list = ["iname", "rate", "turn", "timing", "chktgt", "chektiming", "conds", "continue", "sp"];
+	param_list.forEach((param) => {
+		result[param] = buff_obj[param];
+	});
+	return result;
+}
+
+/*
+	Gives a sort order to a buff
+	For the espers long list of buffs, I prefer to sort the buff by effect
+	Warning interger return used for filtering in get_datatable_NetherBeast
+*/
+function calculate_sort_buff(buff_obj) {
+	if (buff_obj["type1"] >= 61 && buff_obj["type1"] <= 65 && buff_obj["calc1"] != 3) return 1; // Dmg type
+	if (buff_obj["type1"] >= 42 && buff_obj["type1"] <= 60 && buff_obj["calc1"] != 3) return 2; // Elements
+	if (buff_obj["type1"] >= 21 && buff_obj["type1"] <= 26) return 3;  // Stats
+	if (buff_obj["type1"] >= 1 && buff_obj["type1"] <= 4) return 14;  // HP TP AP +%
+	if (buff_obj["type1"] == 155) return 7;  // Accuracy
+	if (buff_obj["type1"] == 156) return 9;  // Evade
+	if (buff_obj["type1"] == 158) return 11; // Crit
+	if (buff_obj["type1"] == 157) return 12; // Crit dmg
+	if (buff_obj["type1"] == 159) return 13; // Crit evade
+	if (buff_obj["type1"] == 120 && buff_obj["calc1"] == 30) return 15; // Type killer
+	if (buff_obj["type1"] == 119 && buff_obj["calc1"] == 30) return 17; // Elt eater
+	if (buff_obj["type1"] >= 61 && buff_obj["type1"] <= 65 && buff_obj["calc1"] === 3) return 19; // atk type res
+	if (buff_obj["type1"] == 313) return 99; // Evocation magic
+	return 50;
+}
+
+// The function expect by default a list of buff objects, if is_id is true, then the list contain only the iname of the buff
+function bufflist_to_txt(buff_list, is_id=false) {
+	let result = ""
+	buff_list.forEach((buff_obj) => {
+		if (is_id) result += buff_to_txt(buff.get(buff_obj));
+		else result += buff_to_txt(buff_obj);
+		result += ", ";
+	});
+	result = result.slice(0,-2);
+	return result;
 }
 
 function union(setA, setB) {
